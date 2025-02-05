@@ -3,8 +3,9 @@ package com.example.learnnow;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import androidx.appcompat.app.AppCompatActivity;
 import android.widget.Button;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 public class RoleSelectionActivity extends AppCompatActivity {
     @Override
@@ -21,7 +22,9 @@ public class RoleSelectionActivity extends AppCompatActivity {
 
     private void navigateToMainActivity(String role) {
         Intent intent = new Intent(RoleSelectionActivity.this, MainActivity.class);
-        intent.putExtra("USER_ROLE", role);
+        intent.putExtra("USER_ROLE", role); // Pass the selected role
         startActivity(intent);
+        finish();
     }
 }
+

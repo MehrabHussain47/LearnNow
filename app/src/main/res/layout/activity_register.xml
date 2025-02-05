@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:padding="16dp">
+
+    <!-- Full Name Input -->
+    <EditText
+        android:id="@+id/editTextFullName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Full Name"
+        android:background="@android:color/white"
+        android:textColorHint="@color/black"
+        android:textColor="@color/black"
+        android:layout_marginBottom="7dp"
+        android:padding="10dp" />
+
+    <!-- Email Input -->
+    <EditText
+        android:id="@+id/editTextEmail"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Email"
+        android:inputType="textEmailAddress"
+        android:background="@android:color/white"
+        android:textColorHint="@color/black"
+        android:textColor="@color/black"
+        android:layout_marginBottom="7dp"
+        android:padding="10dp" />
+
+    <!-- Password Input -->
+    <EditText
+        android:id="@+id/editTextPassword"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Password"
+        android:inputType="textPassword"
+        android:background="@android:color/white"
+        android:textColorHint="@color/black"
+        android:textColor="@color/black"
+        android:layout_marginBottom="7dp"
+        android:padding="10dp" />
+
+    <!-- Confirm Password Input -->
+    <EditText
+        android:id="@+id/editTextConfirmPassword"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Confirm Password"
+        android:inputType="textPassword"
+        android:background="@android:color/white"
+        android:textColorHint="@color/black"
+        android:textColor="@color/black"
+        android:layout_marginBottom="7dp"
+        android:padding="10dp" />
+
+    <!-- Register Button -->
+    <Button
+        android:id="@+id/buttonRegister"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Register"
+        android:backgroundTint="@color/button_register_color"
+        android:textColor="@android:color/white"
+        android:layout_marginTop="10dp" />
+
+    <!-- Login Button -->
+    <Button
+        android:id="@+id/buttonLogin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Login"
+        android:backgroundTint="@color/button_login_color"
+        android:textColor="@android:color/white"
+        android:layout_marginTop="10dp" />
+</LinearLayout>
