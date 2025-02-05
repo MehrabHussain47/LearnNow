@@ -42,6 +42,14 @@ public class MainActivity extends AppCompatActivity {
             String email = editTextEmail.getText().toString().trim();
             String password = editTextPassword.getText().toString().trim();
 
+            // Admin login check
+            if (email.equals("admin@gmail.com") && password.equals("admin")) {
+                Toast.makeText(getApplicationContext(), "Admin Login Successful", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(MainActivity.this, AdminActivity.class)); // Navigate to Admin page
+                finish();
+                return;
+            }
+
             // Check if any field is empty
             if (email.isEmpty() || password.isEmpty()) {
                 Toast.makeText(getApplicationContext(), "Fields are empty", Toast.LENGTH_SHORT).show();
@@ -74,7 +82,6 @@ public class MainActivity extends AppCompatActivity {
                 finish();
             }
         });
-
 
         buttonRegister.setOnClickListener(v -> {
             Intent intent = new Intent(MainActivity.this, RegisterActivity.class);
