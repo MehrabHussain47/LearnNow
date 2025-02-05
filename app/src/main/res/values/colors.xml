@@ -7,4 +7,7 @@
     <color name="button_instructor_color">#2196F3</color> <!-- Blue -->
     <color name="button_login_color">#FF5722</color>
     <color name="button_register_color">#22DE2A</color>
+    <color name="colorPrimary">#6200EE</color>
+    <color name="colorPrimaryVariant">#3700B3</color>
+    <color name="colorAccent">#03DAC5</color>
 </resources>
