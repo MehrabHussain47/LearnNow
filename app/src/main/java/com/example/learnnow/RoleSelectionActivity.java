@@ -15,12 +15,13 @@ public class RoleSelectionActivity extends AppCompatActivity {
         Button studentButton = findViewById(R.id.button_student);
         Button instructorButton = findViewById(R.id.button_instructor);
 
-        studentButton.setOnClickListener(v -> navigateToMainActivity());
-        instructorButton.setOnClickListener(v -> navigateToMainActivity());
+        studentButton.setOnClickListener(v -> navigateToMainActivity("Student"));
+        instructorButton.setOnClickListener(v -> navigateToMainActivity("Instructor"));
     }
 
-    private void navigateToMainActivity() {
+    private void navigateToMainActivity(String role) {
         Intent intent = new Intent(RoleSelectionActivity.this, MainActivity.class);
+        intent.putExtra("USER_ROLE", role);
         startActivity(intent);
     }
 }
