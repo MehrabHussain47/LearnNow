@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:padding="20dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="What role you want?"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="20dp" />
+
+    <Button
+        android:id="@+id/button_student"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="As a Student"
+        android:backgroundTint="@color/button_student_color"
+        android:textColor="@android:color/white" />
+
+    <Button
+        android:id="@+id/button_instructor"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="As an Instructor"
+        android:backgroundTint="@color/button_instructor_color"
+        android:textColor="@android:color/white"
+        android:layout_marginTop="10dp" />
+</LinearLayout>

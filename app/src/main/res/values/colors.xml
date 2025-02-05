@@ -2,4 +2,7 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="colorful_background">#900935</color>  <!-- Change this color as needed -->
+    <color name="button_student_color">#4CAF50</color> <!-- Green -->
+    <color name="button_instructor_color">#2196F3</color> <!-- Blue -->
 </resources>
