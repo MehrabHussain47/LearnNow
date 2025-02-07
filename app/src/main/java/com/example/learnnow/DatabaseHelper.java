@@ -102,12 +102,18 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     public boolean updateUserFullName(int userId, String newFullName) {
         SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues values = new ContentValues();
-        values.put(COLUMN_FULLNAME, newFullName);
 
-        int rowsAffected = db.update(TABLE_USERS, values, COLUMN_ID + "=?", new String[]{String.valueOf(userId)});
-        return rowsAffected > 0;
+        // Prepare the update statement
+        ContentValues contentValues = new ContentValues();
+        contentValues.put("full_name", newFullName); // The column name and new value
+
+        // Execute the update
+        int rowsAffected = db.update("users", contentValues, "id = ?", new String[]{String.valueOf(userId)});
+        db.close();
+
+        return rowsAffected > 0; // Returns true if at least one row was updated
     }
+
 
 
     // Check if the email already exists in the database

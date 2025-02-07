@@ -37,8 +37,8 @@ public class AdminActivity extends AppCompatActivity implements UserAdapter.OnUs
 
     @Override
     public void onEditUser(UserModel user) {
-        Intent intent = new Intent(this, EditUserActivity.class);
-        intent.putExtra("USER_ID", user.getId());
+        Intent intent = new Intent(AdminActivity.this, EditUserActivity.class);
+        intent.putExtra("USER_ID", user.getId()); // Pass the user ID
         startActivity(intent);
     }
 
