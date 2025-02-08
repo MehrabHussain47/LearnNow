@@ -49,7 +49,7 @@ public class AdminActivity extends AppCompatActivity implements UserAdapter.OnUs
             Toast.makeText(this, "User Deleted", Toast.LENGTH_SHORT).show();
             loadUsers(); // Refresh list after deletion
         } else {
-            Toast.makeText(this, "Failed to Delete", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Failed to Delete", Toast.LENGTH_SHORT).show(); //Oky vai
         }
     }
 }
