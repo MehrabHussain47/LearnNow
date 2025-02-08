@@ -10,4 +10,5 @@
     <color name="colorPrimary">#6200EE</color>
     <color name="colorPrimaryVariant">#3700B3</color>
     <color name="colorAccent">#03DAC5</color>
+    <color name="selector_bottom_navigation">#0AAD9D</color>
 </resources>
