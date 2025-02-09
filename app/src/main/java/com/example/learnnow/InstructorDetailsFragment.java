@@ -21,7 +21,7 @@ public class InstructorDetailsFragment extends Fragment {
         textViewInstructorDetails = view.findViewById(R.id.textViewInstructorDetails);
 
         // Set the content to display
-        String detailsContent = "About LearnNow\n" +
+        String detailsContent = "About LearnNow:\n" +
                 "Welcome to LearnNow – Your Gateway to Knowledge!\n\n" +
                 "LearnNow is an innovative e-learning platform designed to make education more accessible and engaging. " +
                 "Whether you're a student looking to expand your knowledge or an instructor eager to share expertise, " +
