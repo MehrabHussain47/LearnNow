@@ -1,5 +1,6 @@
 package com.example.learnnow;
 
+import java.io.ByteArrayOutputStream;
 import java.util.List;
 import java.util.ArrayList;
 import android.database.Cursor;
@@ -7,6 +8,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.util.Log;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
@@ -29,7 +32,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String COLUMN_COURSE_ID = "course_id";
     public static final String COLUMN_COURSE_NAME = "course_name";
     public static final String COLUMN_INSTRUCTOR_NAME = "instructor_name";
-    public static final String COLUMN_IMAGE_PATH = "image_path";
+    public static final String COLUMN_IMAGE_BLOB = "image_blob";
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -53,9 +56,16 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 COLUMN_COURSE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 COLUMN_COURSE_NAME + " TEXT, " +
                 COLUMN_INSTRUCTOR_NAME + " TEXT, " +
-                COLUMN_IMAGE_PATH + " TEXT)";
+                COLUMN_IMAGE_BLOB + " BLOB)";
         db.execSQL(createTableQuery2);
         Log.d("DatabaseHelper", "Courses table created.");
+
+    }
+
+    private byte[] convertBitmapToByteArray(Bitmap bitmap) {
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+        return stream.toByteArray();
     }
 
     @Override
@@ -166,16 +176,21 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return exists;
     }
 
-    public void insertCourse(String courseName, String instructorName, String imagePath) {
+
+
+    public boolean insertCourse(String courseName, String instructorName, Bitmap image) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(COLUMN_COURSE_NAME, courseName);
         values.put(COLUMN_INSTRUCTOR_NAME, instructorName);
-        values.put(COLUMN_IMAGE_PATH, imagePath);
+        values.put(COLUMN_IMAGE_BLOB, convertBitmapToByteArray(image));
 
         long result = db.insert(TABLE_COURSES, null, values);
         db.close();
+
+        return result != -1; // Return true if insert was successful
     }
+
 
     // Get all courses from the courses table
     public List<CourseModel> getAllCourses() {
@@ -188,14 +203,20 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 int courseId = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_COURSE_ID));
                 String courseName = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_COURSE_NAME));
                 String instructorName = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_INSTRUCTOR_NAME));
-                String imagePath = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_IMAGE_PATH));
+                byte[] imageBytes = cursor.getBlob(cursor.getColumnIndexOrThrow(COLUMN_IMAGE_BLOB));
+                Bitmap image = convertByteArrayToBitmap(imageBytes);
 
-                courseList.add(new CourseModel(courseId, courseName, instructorName, imagePath));
+                courseList.add(new CourseModel(courseId, courseName, instructorName, image.toString()));
             } while (cursor.moveToNext());
         }
         cursor.close();
         return courseList;
     }
+
+    private Bitmap convertByteArrayToBitmap(byte[] imageBytes) {
+        return BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length);
+    }
+
 
     // Get a course by its ID
     public CourseModel getCourseById(int courseId) {
@@ -206,7 +227,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             int id = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_COURSE_ID));
             String courseName = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_COURSE_NAME));
             String instructorName = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_INSTRUCTOR_NAME));
-            String imagePath = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_IMAGE_PATH));
+            String imagePath = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_IMAGE_BLOB));
             cursor.close();
             return new CourseModel(id, courseName, instructorName, imagePath);
         }
@@ -223,12 +244,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     // Update course details by its ID
-    public boolean updateCourse(int courseId, String courseName, String instructorName, String imagePath) {
+    public boolean updateCourse(int courseId, String courseName, String instructorName, Bitmap image) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(COLUMN_COURSE_NAME, courseName);
         contentValues.put(COLUMN_INSTRUCTOR_NAME, instructorName);
-        contentValues.put(COLUMN_IMAGE_PATH, imagePath);
+        contentValues.put(COLUMN_IMAGE_BLOB, convertBitmapToByteArray(image));
 
         int rowsAffected = db.update(TABLE_COURSES, contentValues, COLUMN_COURSE_ID + "=?", new String[]{String.valueOf(courseId)});
         db.close();

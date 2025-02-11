@@ -3,6 +3,7 @@ package com.example.learnnow;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -17,6 +18,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+
+import java.io.IOException;
 
 public class AddCourseFragment extends Fragment {
 
@@ -73,27 +76,40 @@ public class AddCourseFragment extends Fragment {
         }
     }
 
+
+
     // Add course to the database
     private void addCourse() {
-        String courseName = courseNameEditText.getText().toString();
-        String instructorName = instructorNameEditText.getText().toString();
+        String courseName = courseNameEditText.getText().toString().trim();
+        String instructorName = instructorNameEditText.getText().toString().trim();
 
         if (courseName.isEmpty() || instructorName.isEmpty() || selectedImageUri == null) {
             Toast.makeText(getContext(), "Please fill in all fields and select an image", Toast.LENGTH_SHORT).show();
         } else {
-            // Convert image URI to string path (this can be adjusted based on your needs)
-            String imagePath = selectedImageUri.toString();
+            try {
+                // Convert URI to Bitmap
+                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), selectedImageUri);
 
-            // Insert course into the database
-            databaseHelper.insertCourse(courseName, instructorName, imagePath);
+                // Insert course into the database
+                boolean isInserted = databaseHelper.insertCourse(courseName, instructorName, bitmap);
 
-            // Show success message
-            Toast.makeText(getContext(), "Course added successfully!", Toast.LENGTH_SHORT).show();
+                if (isInserted) {
+                    Toast.makeText(getContext(), "Course added successfully!", Toast.LENGTH_SHORT).show();
 
-            // Clear the fields
-            courseNameEditText.setText("");
-            instructorNameEditText.setText("");
-            photoImageView.setImageResource(R.drawable.ic_placeholder); // Reset ImageView
+                    // Clear the fields
+                    courseNameEditText.setText("");
+                    instructorNameEditText.setText("");
+                    photoImageView.setImageResource(R.drawable.ic_placeholder); // Reset ImageView
+                    selectedImageUri = null;
+                } else {
+                    Toast.makeText(getContext(), "Failed to add course!", Toast.LENGTH_SHORT).show();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+                Toast.makeText(getContext(), "Error processing image!", Toast.LENGTH_SHORT).show();
+            }
         }
     }
+
+
 }
