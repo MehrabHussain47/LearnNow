@@ -34,6 +34,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String COLUMN_INSTRUCTOR_NAME = "instructor_name";
     public static final String COLUMN_IMAGE_BLOB = "image_blob";
 
+    // New table for course purchase requests
+    public static final String TABLE_REQUESTS = "requests";
+    public static final String COLUMN_REQUEST_ID = "request_id";
+    public static final String COLUMN_REQUEST_STUDENT = "student_fullname";
+    public static final String COLUMN_REQUEST_COURSE = "course_name";
+
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
@@ -41,6 +47,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         Log.d("DatabaseHelper", "Creating tables...");
+
         // Users Table
         String createTableQuery = "CREATE TABLE " + TABLE_USERS + " (" +
                 COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
@@ -60,6 +67,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(createTableQuery2);
         Log.d("DatabaseHelper", "Courses table created.");
 
+        // Requests Table
+        String createRequestTableQuery = "CREATE TABLE " + TABLE_REQUESTS + " (" +
+                COLUMN_REQUEST_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                COLUMN_REQUEST_STUDENT + " TEXT, " +
+                COLUMN_REQUEST_COURSE + " TEXT)";
+        db.execSQL(createRequestTableQuery);
+        Log.d("DatabaseHelper", "Requests table created.");
     }
 
     private byte[] convertBitmapToByteArray(Bitmap bitmap) {
@@ -73,6 +87,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         // Drop older table if exists
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_USERS);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_COURSES);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_REQUESTS);
         // Create the table again with the new schema
         onCreate(db);
     }
@@ -142,6 +157,34 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.close();
 
         return rowsAffected > 0; // Returns true if at least one row was updated
+    }
+
+    // Insert a new request
+    public boolean insertRequest(String studentFullName, String courseName) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_REQUEST_STUDENT, studentFullName);
+        values.put(COLUMN_REQUEST_COURSE, courseName);
+        long result = db.insert(TABLE_REQUESTS, null, values);
+        db.close();
+        return result != -1;
+    }
+
+    // Retrieve all requests
+    public List<RequestModel> getAllRequests() {
+        List<RequestModel> requestList = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_REQUESTS, null);
+        if (cursor.moveToFirst()) {
+            do {
+                int requestId = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_REQUEST_ID));
+                String studentFullName = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_REQUEST_STUDENT));
+                String courseName = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_REQUEST_COURSE));
+                requestList.add(new RequestModel(requestId, studentFullName, courseName));
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        return requestList;
     }
 
     // Check if the email already exists in the database

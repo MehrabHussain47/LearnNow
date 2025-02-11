@@ -6,6 +6,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".StudentActivity">
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:src="@drawable/white_background"
+        android:contentDescription="@string/white_background"
+        android:alpha="0.5" />
 
     <!-- Fragment/Container for displaying content -->
     <FrameLayout

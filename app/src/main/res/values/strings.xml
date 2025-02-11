@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">LearnNow</string>
     <string name="background_image">Background image of the learning app</string>
+    <string name="white_background">Background of the whole app.</string>
 </resources>

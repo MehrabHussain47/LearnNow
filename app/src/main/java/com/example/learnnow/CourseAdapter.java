@@ -1,6 +1,5 @@
 package com.example.learnnow;
 
-import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,9 +16,14 @@ import java.util.List;
 public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.CourseViewHolder> {
 
     private List<CourseModel> courseList;
+    private String currentStudentName; // the logged-in student's full name
+    private DatabaseHelper databaseHelper;
 
-    public CourseAdapter(List<CourseModel> courseList) {
+    // New constructor with all necessary parameters
+    public CourseAdapter(List<CourseModel> courseList, String currentStudentName, DatabaseHelper databaseHelper) {
         this.courseList = courseList;
+        this.currentStudentName = currentStudentName;
+        this.databaseHelper = databaseHelper;
     }
 
     @NonNull
@@ -34,17 +38,23 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.CourseView
         CourseModel course = courseList.get(position);
         holder.courseNameTextView.setText("Course Name: " + course.getCourseName());
         holder.instructorNameTextView.setText("Instructor Name: " + course.getInstructorName());
-        Bitmap image = course.getCourseImage();
-        if (image != null) {
-            holder.courseImageView.setImageBitmap(image);
+        if(course.getCourseImage() != null){
+            holder.courseImageView.setImageBitmap(course.getCourseImage());
         } else {
             holder.courseImageView.setImageResource(R.drawable.ic_placeholder);
         }
 
         holder.enrollButton.setOnClickListener(v -> {
-            Toast.makeText(v.getContext(), "Enrolled in " + course.getCourseName(), Toast.LENGTH_SHORT).show();
+            // Insert a request using the student's full name and course name
+            boolean inserted = databaseHelper.insertRequest(currentStudentName, course.getCourseName());
+            if(inserted) {
+                Toast.makeText(v.getContext(), "Request Sent", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(v.getContext(), "Request Failed", Toast.LENGTH_SHORT).show();
+            }
         });
     }
+
 
     @Override
     public int getItemCount() {
