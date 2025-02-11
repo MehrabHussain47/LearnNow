@@ -1,16 +1,18 @@
 package com.example.learnnow;
 
+import android.graphics.Bitmap;
+
 public class CourseModel {
     private int courseId;
     private String courseName;
     private String instructorName;
-    private String imagePath; // URL or path to the course image
+    private Bitmap courseImage;
 
-    public CourseModel(int courseId, String courseName, String instructorName, String imagePath) {
+    public CourseModel(int courseId, String courseName, String instructorName, Bitmap courseImage) {
         this.courseId = courseId;
         this.courseName = courseName;
         this.instructorName = instructorName;
-        this.imagePath = imagePath;
+        this.courseImage = courseImage;
     }
 
     public int getCourseId() {
@@ -25,7 +27,7 @@ public class CourseModel {
         return instructorName;
     }
 
-    public String getImagePath() {
-        return imagePath;
+    public Bitmap getCourseImage() {
+        return courseImage;
     }
 }

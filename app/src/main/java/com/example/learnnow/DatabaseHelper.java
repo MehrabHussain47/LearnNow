@@ -206,7 +206,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 byte[] imageBytes = cursor.getBlob(cursor.getColumnIndexOrThrow(COLUMN_IMAGE_BLOB));
                 Bitmap image = convertByteArrayToBitmap(imageBytes);
 
-                courseList.add(new CourseModel(courseId, courseName, instructorName, image.toString()));
+                courseList.add(new CourseModel(courseId, courseName, instructorName, image));
             } while (cursor.moveToNext());
         }
         cursor.close();
@@ -219,21 +219,21 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
 
     // Get a course by its ID
-    public CourseModel getCourseById(int courseId) {
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_COURSES + " WHERE " + COLUMN_COURSE_ID + "=?", new String[]{String.valueOf(courseId)});
-
-        if (cursor.moveToFirst()) {
-            int id = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_COURSE_ID));
-            String courseName = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_COURSE_NAME));
-            String instructorName = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_INSTRUCTOR_NAME));
-            String imagePath = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_IMAGE_BLOB));
-            cursor.close();
-            return new CourseModel(id, courseName, instructorName, imagePath);
-        }
-        cursor.close();
-        return null;
-    }
+//    public CourseModel getCourseById(int courseId) {
+//        SQLiteDatabase db = this.getReadableDatabase();
+//        Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_COURSES + " WHERE " + COLUMN_COURSE_ID + "=?", new String[]{String.valueOf(courseId)});
+//
+//        if (cursor.moveToFirst()) {
+//            int id = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_COURSE_ID));
+//            String courseName = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_COURSE_NAME));
+//            String instructorName = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_INSTRUCTOR_NAME));
+//            String imagePath = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_IMAGE_BLOB));
+//            cursor.close();
+//            return new CourseModel(id, courseName, instructorName, imagePath);
+//        }
+//        cursor.close();
+//        return null;
+//    }
 
     // Delete a course by its ID
     public boolean deleteCourse(int courseId) {
