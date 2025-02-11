@@ -83,7 +83,7 @@ public class RegisterActivity extends AppCompatActivity {
 
     // Validate Email using regex (for valid Gmail address)
     private boolean isValidEmail(String email) {
-        String emailPattern = "[a-zA-Z0-9._-]+@gmail\\.com"; // Matches Gmail addresses
+        String emailPattern = "[a-zA-Z0-9._-]+@(gmail\\.com|lus\\.ac\\.bd)"; // Matches Gmail addresses
         Pattern pattern = Pattern.compile(emailPattern);
         Matcher matcher = pattern.matcher(email);
         return matcher.matches();
