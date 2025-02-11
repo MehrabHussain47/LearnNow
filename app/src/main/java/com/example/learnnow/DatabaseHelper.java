@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 
@@ -15,13 +16,20 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     // Table Name
     private static final String TABLE_USERS = "users";
+    public static final String TABLE_COURSES = "courses";
 
-    // Columns
+    // Columns for user table
     private static final String COLUMN_ID = "id";
     private static final String COLUMN_FULLNAME = "full_name";
     private static final String COLUMN_EMAIL = "email";
     private static final String COLUMN_PASSWORD = "password";
     private static final String COLUMN_ROLE = "role"; // New column for role
+
+    //Column for course table
+    public static final String COLUMN_COURSE_ID = "course_id";
+    public static final String COLUMN_COURSE_NAME = "course_name";
+    public static final String COLUMN_INSTRUCTOR_NAME = "instructor_name";
+    public static final String COLUMN_IMAGE_PATH = "image_path";
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -29,14 +37,25 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        // Create Users Table with new "role" column
+        Log.d("DatabaseHelper", "Creating tables...");
+        // Users Table
         String createTableQuery = "CREATE TABLE " + TABLE_USERS + " (" +
                 COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 COLUMN_FULLNAME + " TEXT, " +
                 COLUMN_EMAIL + " TEXT UNIQUE, " +
                 COLUMN_PASSWORD + " TEXT, " +
-                COLUMN_ROLE + " TEXT)"; // Add the role column here
+                COLUMN_ROLE + " TEXT)";
         db.execSQL(createTableQuery);
+        Log.d("DatabaseHelper", "Users table created.");
+
+        // Courses Table
+        String createTableQuery2 = "CREATE TABLE " + TABLE_COURSES + " (" +
+                COLUMN_COURSE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                COLUMN_COURSE_NAME + " TEXT, " +
+                COLUMN_INSTRUCTOR_NAME + " TEXT, " +
+                COLUMN_IMAGE_PATH + " TEXT)";
+        db.execSQL(createTableQuery2);
+        Log.d("DatabaseHelper", "Courses table created.");
     }
 
     @Override
@@ -114,8 +133,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return rowsAffected > 0; // Returns true if at least one row was updated
     }
 
-
-
     // Check if the email already exists in the database
     public boolean checkEmailExists(String email) {
         SQLiteDatabase db = this.getReadableDatabase();
@@ -147,5 +164,84 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         cursor.close();
         return exists;
     }
+
+    public void insertCourse(String courseName, String instructorName, String imagePath) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_COURSE_NAME, courseName);
+        values.put(COLUMN_INSTRUCTOR_NAME, instructorName);
+        values.put(COLUMN_IMAGE_PATH, imagePath);
+
+        long result = db.insert(TABLE_COURSES, null, values);
+        db.close();
+    }
+
+    // Get all courses from the courses table
+    public List<CourseModel> getAllCourses() {
+        List<CourseModel> courseList = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_COURSES, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                int courseId = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_COURSE_ID));
+                String courseName = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_COURSE_NAME));
+                String instructorName = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_INSTRUCTOR_NAME));
+                String imagePath = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_IMAGE_PATH));
+
+                courseList.add(new CourseModel(courseId, courseName, instructorName, imagePath));
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        return courseList;
+    }
+
+    // Get a course by its ID
+    public CourseModel getCourseById(int courseId) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_COURSES + " WHERE " + COLUMN_COURSE_ID + "=?", new String[]{String.valueOf(courseId)});
+
+        if (cursor.moveToFirst()) {
+            int id = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_COURSE_ID));
+            String courseName = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_COURSE_NAME));
+            String instructorName = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_INSTRUCTOR_NAME));
+            String imagePath = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_IMAGE_PATH));
+            cursor.close();
+            return new CourseModel(id, courseName, instructorName, imagePath);
+        }
+        cursor.close();
+        return null;
+    }
+
+    // Delete a course by its ID
+    public boolean deleteCourse(int courseId) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        int rowsAffected = db.delete(TABLE_COURSES, COLUMN_COURSE_ID + "=?", new String[]{String.valueOf(courseId)});
+        db.close();
+        return rowsAffected > 0;
+    }
+
+    // Update course details by its ID
+    public boolean updateCourse(int courseId, String courseName, String instructorName, String imagePath) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(COLUMN_COURSE_NAME, courseName);
+        contentValues.put(COLUMN_INSTRUCTOR_NAME, instructorName);
+        contentValues.put(COLUMN_IMAGE_PATH, imagePath);
+
+        int rowsAffected = db.update(TABLE_COURSES, contentValues, COLUMN_COURSE_ID + "=?", new String[]{String.valueOf(courseId)});
+        db.close();
+        return rowsAffected > 0;
+    }
+
+    // Check if a course exists by its name
+    public boolean checkCourseExists(String courseName) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_COURSES + " WHERE " + COLUMN_COURSE_NAME + "=?", new String[]{courseName});
+        boolean exists = cursor.getCount() > 0;
+        cursor.close();
+        return exists;
+    }
+
 
 }
