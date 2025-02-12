@@ -3,12 +3,13 @@ package com.example.learnnow;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Patterns;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -16,6 +17,7 @@ public class MainActivity extends AppCompatActivity {
     Button buttonLogin, buttonRegister;
     TextView welcomeText;
     DatabaseHelper db;
+    FirebaseAuth firebaseAuth;
     String selectedRole;
 
     @Override
@@ -23,7 +25,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        firebaseAuth = FirebaseAuth.getInstance();
         db = new DatabaseHelper(this);
+
         editTextEmail = findViewById(R.id.editTextEmail);
         editTextPassword = findViewById(R.id.editTextPassword);
         buttonLogin = findViewById(R.id.buttonLogin);
@@ -40,7 +44,6 @@ public class MainActivity extends AppCompatActivity {
             String email = editTextEmail.getText().toString().trim();
             String password = editTextPassword.getText().toString().trim();
 
-            // Admin login check
             if (email.equals("admin@gmail.com") && password.equals("admin")) {
                 Toast.makeText(getApplicationContext(), "Admin Login Successful", Toast.LENGTH_SHORT).show();
                 startActivity(new Intent(MainActivity.this, AdminActivity.class));
@@ -50,27 +53,10 @@ public class MainActivity extends AppCompatActivity {
 
             if (email.isEmpty() || password.isEmpty()) {
                 Toast.makeText(getApplicationContext(), "Fields are empty", Toast.LENGTH_SHORT).show();
-            }
-            else if (!isValidEmail(email)) {
+            } else if (!isValidEmail(email)) {
                 editTextEmail.setError("Invalid Email");
-            }
-            else if (!db.checkEmailExists(email)) {
-                Toast.makeText(getApplicationContext(), "User not registered. Please Register first.", Toast.LENGTH_SHORT).show();
-            }
-            else if (!db.checkEmailPassword(email, password)) {
-                Toast.makeText(getApplicationContext(), "Password doesn't match", Toast.LENGTH_SHORT).show();
-            }
-            else if (!db.checkEmailPasswordRole(email, password, selectedRole)) {
-                Toast.makeText(getApplicationContext(), "Invalid Credentials or Role mismatch", Toast.LENGTH_SHORT).show();
-            }
-            else {
-                Toast.makeText(getApplicationContext(), "Login Successful", Toast.LENGTH_SHORT).show();
-                if (selectedRole.equals("Student")) {
-                    startActivity(new Intent(MainActivity.this, StudentActivity.class));
-                } else if (selectedRole.equals("Instructor")) {
-                    startActivity(new Intent(MainActivity.this, InstructorActivity.class));
-                }
-                finish();
+            } else {
+                loginUser(email, password);
             }
         });
 
@@ -79,6 +65,33 @@ public class MainActivity extends AppCompatActivity {
             intent.putExtra("USER_ROLE", selectedRole);
             startActivity(intent);
         });
+    }
+
+    private void loginUser(String email, String password) {
+        firebaseAuth.signInWithEmailAndPassword(email, password)
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        FirebaseUser user = firebaseAuth.getCurrentUser();
+                        if (user != null && user.isEmailVerified()) {
+                            if (!db.checkEmailExists(email)) {
+                                db.insertUser(user.getDisplayName(), email, password, selectedRole);
+                            }
+
+                            Toast.makeText(MainActivity.this, "Login Successful", Toast.LENGTH_SHORT).show();
+
+                            if ("Student".equals(selectedRole)) {
+                                startActivity(new Intent(MainActivity.this, StudentActivity.class));
+                            } else if ("Instructor".equals(selectedRole)) {
+                                startActivity(new Intent(MainActivity.this, InstructorActivity.class));
+                            }
+                            finish();
+                        } else {
+                            Toast.makeText(MainActivity.this, "Please verify your email before logging in.", Toast.LENGTH_LONG).show();
+                        }
+                    } else {
+                        Toast.makeText(MainActivity.this, "Login failed: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 
     private boolean isValidEmail(String email) {

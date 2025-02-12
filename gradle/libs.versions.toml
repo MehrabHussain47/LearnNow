@@ -11,6 +11,7 @@ recyclerview = "1.4.0"
 picasso = "2.71828"
 googleGmsGoogleServices = "4.4.2"
 firebaseAuth = "23.2.0"
+firebaseAnalytics = "22.2.0"
 
 [libraries]
 junit = { group = "junit", name = "junit", version.ref = "junit" }
@@ -23,6 +24,7 @@ constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayo
 recyclerview = { group = "androidx.recyclerview", name = "recyclerview", version.ref = "recyclerview" }
 picasso = { module = "com.squareup.picasso:picasso", version.ref = "picasso" }
 firebase-auth = { group = "com.google.firebase", name = "firebase-auth", version.ref = "firebaseAuth" }
+firebase-analytics = { group = "com.google.firebase", name = "firebase-analytics", version.ref = "firebaseAnalytics" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
