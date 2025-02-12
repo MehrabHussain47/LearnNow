@@ -29,7 +29,6 @@ public class InstructorActivity extends AppCompatActivity {
             return true;
         });
 
-        // Load default fragment
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new AddCourseFragment()).commit();
         }

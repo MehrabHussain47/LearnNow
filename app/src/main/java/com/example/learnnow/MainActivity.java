@@ -14,9 +14,9 @@ public class MainActivity extends AppCompatActivity {
 
     EditText editTextEmail, editTextPassword;
     Button buttonLogin, buttonRegister;
-    TextView welcomeText;  // Welcome text view
+    TextView welcomeText;
     DatabaseHelper db;
-    String selectedRole; // Selected role passed from RoleSelectionActivity or RegisterActivity
+    String selectedRole;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,12 +28,10 @@ public class MainActivity extends AppCompatActivity {
         editTextPassword = findViewById(R.id.editTextPassword);
         buttonLogin = findViewById(R.id.buttonLogin);
         buttonRegister = findViewById(R.id.buttonRegister);
-        welcomeText = findViewById(R.id.textWelcome);  // Initialize welcome text view
+        welcomeText = findViewById(R.id.textWelcome);
 
-        // Get the selected role passed from RoleSelectionActivity or RegisterActivity
         selectedRole = getIntent().getStringExtra("USER_ROLE");
 
-        // Display the welcome message with the role
         if (selectedRole != null) {
             welcomeText.setText("Welcome, " + selectedRole + "!");
         }
@@ -45,39 +43,32 @@ public class MainActivity extends AppCompatActivity {
             // Admin login check
             if (email.equals("admin@gmail.com") && password.equals("admin")) {
                 Toast.makeText(getApplicationContext(), "Admin Login Successful", Toast.LENGTH_SHORT).show();
-                startActivity(new Intent(MainActivity.this, AdminActivity.class)); // Navigate to Admin page
+                startActivity(new Intent(MainActivity.this, AdminActivity.class));
                 finish();
                 return;
             }
 
-            // Check if any field is empty
             if (email.isEmpty() || password.isEmpty()) {
                 Toast.makeText(getApplicationContext(), "Fields are empty", Toast.LENGTH_SHORT).show();
             }
-            // Validate email format
             else if (!isValidEmail(email)) {
                 editTextEmail.setError("Invalid Email");
             }
-            // Check if email exists in the database
             else if (!db.checkEmailExists(email)) {
                 Toast.makeText(getApplicationContext(), "User not registered. Please Register first.", Toast.LENGTH_SHORT).show();
             }
-            // Check if the email and password match, but role does not match
             else if (!db.checkEmailPassword(email, password)) {
                 Toast.makeText(getApplicationContext(), "Password doesn't match", Toast.LENGTH_SHORT).show();
             }
-            // Check if email, password, and role do not match together
             else if (!db.checkEmailPasswordRole(email, password, selectedRole)) {
                 Toast.makeText(getApplicationContext(), "Invalid Credentials or Role mismatch", Toast.LENGTH_SHORT).show();
             }
-            // Successful login
             else {
                 Toast.makeText(getApplicationContext(), "Login Successful", Toast.LENGTH_SHORT).show();
-                // Navigate to the respective activity based on role
                 if (selectedRole.equals("Student")) {
-                    startActivity(new Intent(MainActivity.this, StudentActivity.class)); // Replace with Student's Activity
+                    startActivity(new Intent(MainActivity.this, StudentActivity.class));
                 } else if (selectedRole.equals("Instructor")) {
-                    startActivity(new Intent(MainActivity.this, InstructorActivity.class)); // Replace with Instructor's Activity
+                    startActivity(new Intent(MainActivity.this, InstructorActivity.class));
                 }
                 finish();
             }
@@ -85,14 +76,13 @@ public class MainActivity extends AppCompatActivity {
 
         buttonRegister.setOnClickListener(v -> {
             Intent intent = new Intent(MainActivity.this, RegisterActivity.class);
-            intent.putExtra("USER_ROLE", selectedRole); // Keep the role
+            intent.putExtra("USER_ROLE", selectedRole);
             startActivity(intent);
         });
     }
 
-    // Validate Email using regex (for valid Gmail address)
     private boolean isValidEmail(String email) {
-        String emailPattern = "[a-zA-Z0-9._-]+@(gmail\\.com|lus\\.ac\\.bd)"; // Matches Gmail addresses
+        String emailPattern = "[a-zA-Z0-9._-]+@(gmail\\.com|lus\\.ac\\.bd)";
         return Patterns.EMAIL_ADDRESS.matcher(email).matches() && email.matches(emailPattern);
     }
 }

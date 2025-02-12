@@ -3,13 +3,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <!-- ScrollView to make the content scrollable -->
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:padding="16dp">
 
-        <!-- TextView for displaying the content -->
         <TextView
             android:id="@+id/textViewInstructorDetails"
             android:layout_width="match_parent"

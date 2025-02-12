@@ -12,11 +12,10 @@ public class SplashScreenActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_screen);
 
-        // Delay for 3 seconds and navigate to RoleSelectionActivity
         new Handler(Looper.getMainLooper()).postDelayed(() -> {
             Intent intent = new Intent(SplashScreenActivity.this, RoleSelectionActivity.class);
             startActivity(intent);
             finish();
-        }, 3000); // 3 seconds delay
+        }, 3000);
     }
 }

@@ -14,7 +14,6 @@
         android:layout_height="wrap_content"
         android:padding="16dp">
 
-        <!-- Course Image on the left -->
         <ImageView
             android:id="@+id/courseImage"
             android:layout_width="100dp"
@@ -24,7 +23,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <!-- Course Name Text -->
         <TextView
             android:id="@+id/courseName"
             android:layout_width="0dp"
@@ -37,7 +35,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginStart="16dp" />
 
-        <!-- Instructor Name Text -->
         <TextView
             android:id="@+id/instructorName"
             android:layout_width="0dp"
@@ -49,7 +46,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginTop="8dp" />
 
-        <!-- Enroll Button at bottom right of the card -->
         <Button
             android:id="@+id/enrollButton"
             android:layout_width="wrap_content"

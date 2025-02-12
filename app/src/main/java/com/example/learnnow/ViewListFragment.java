@@ -42,8 +42,7 @@ public class ViewListFragment extends Fragment {
         } else {
             noCourseTextView.setVisibility(View.GONE);
             recyclerView.setVisibility(View.VISIBLE);
-            // Assuming you have a way to obtain the current student's name (e.g., from SharedPreferences or an Intent)
-            String currentStudentName = "You have a request for a course enrollment."; // Replace this with your actual method of retrieving the student's name
+            String currentStudentName = "You have a request for a course enrollment.";
             DatabaseHelper dbHelper = new DatabaseHelper(getContext());
             courseAdapter = new CourseAdapter(courseList, currentStudentName, dbHelper);
             recyclerView.setAdapter(courseAdapter);

@@ -30,7 +30,7 @@ public class AdminActivity extends AppCompatActivity implements UserAdapter.OnUs
     }
 
     private void loadUsers() {
-        userList = db.getAllUsers(); // Fetch users from DB
+        userList = db.getAllUsers();
         userAdapter = new UserAdapter(userList, this);
         recyclerView.setAdapter(userAdapter);
     }
@@ -38,7 +38,7 @@ public class AdminActivity extends AppCompatActivity implements UserAdapter.OnUs
     @Override
     public void onEditUser(UserModel user) {
         Intent intent = new Intent(AdminActivity.this, EditUserActivity.class);
-        intent.putExtra("USER_ID", user.getId()); // Pass the user ID
+        intent.putExtra("USER_ID", user.getId());
         startActivity(intent);
     }
 
@@ -47,9 +47,9 @@ public class AdminActivity extends AppCompatActivity implements UserAdapter.OnUs
         boolean deleted = db.deleteUser(userId);
         if (deleted) {
             Toast.makeText(this, "User Deleted", Toast.LENGTH_SHORT).show();
-            loadUsers(); // Refresh list after deletion
+            loadUsers();
         } else {
-            Toast.makeText(this, "Failed to Delete", Toast.LENGTH_SHORT).show(); //Oky vai
+            Toast.makeText(this, "Failed to Delete", Toast.LENGTH_SHORT).show();
         }
     }
 }

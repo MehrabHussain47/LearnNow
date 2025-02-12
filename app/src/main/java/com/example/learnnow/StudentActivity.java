@@ -72,7 +72,6 @@ public class StudentActivity extends AppCompatActivity {
             return true;
         });
 
-        // Load default fragment
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new ViewListFragment()).commit();
         }

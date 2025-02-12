@@ -16,10 +16,9 @@ import java.util.List;
 public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.CourseViewHolder> {
 
     private List<CourseModel> courseList;
-    private String currentStudentName; // the logged-in student's full name
+    private String currentStudentName;
     private DatabaseHelper databaseHelper;
 
-    // New constructor with all necessary parameters
     public CourseAdapter(List<CourseModel> courseList, String currentStudentName, DatabaseHelper databaseHelper) {
         this.courseList = courseList;
         this.currentStudentName = currentStudentName;
@@ -45,7 +44,6 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.CourseView
         }
 
         holder.enrollButton.setOnClickListener(v -> {
-            // Insert a request using the student's full name and course name
             boolean inserted = databaseHelper.insertRequest(currentStudentName, course.getCourseName());
             if(inserted) {
                 Toast.makeText(v.getContext(), "Request Sent", Toast.LENGTH_SHORT).show();

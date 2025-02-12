@@ -33,15 +33,11 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
         String message = request.getStudentFullName();
         holder.messageTextView.setText(message);
 
-        // Handle Accept button click
         holder.acceptButton.setOnClickListener(v -> {
-            // (You could update request status here)
             Toast.makeText(v.getContext(), "Request accepted", Toast.LENGTH_SHORT).show();
         });
 
-        // Handle Decline button click
         holder.declineButton.setOnClickListener(v -> {
-            // (You could delete the request here)
             Toast.makeText(v.getContext(), "Request declined", Toast.LENGTH_SHORT).show();
         });
     }

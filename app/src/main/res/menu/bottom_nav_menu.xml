@@ -1,18 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <!-- View List item (new) -->
     <item
         android:id="@+id/nav_view_list"
         android:title="View List"
         android:icon="@drawable/ic_view_list" />
 
-    <!-- Enrolled List item -->
     <item
         android:id="@+id/nav_enrolled"
         android:title="Enrolled List"
         android:icon="@drawable/ic_enrolled" />
 
-    <!-- Details item -->
     <item
         android:id="@+id/nav_details"
         android:title="Details"

@@ -20,7 +20,6 @@
         android:layout_margin="16dp"
         android:background="@android:color/transparent">
 
-        <!-- Full Name Input -->
         <EditText
             android:id="@+id/editTextFullName"
             android:layout_width="match_parent"
@@ -32,7 +31,6 @@
             android:layout_marginBottom="7dp"
             android:padding="10dp" />
 
-        <!-- Email Input -->
         <EditText
             android:id="@+id/editTextEmail"
             android:layout_width="match_parent"
@@ -45,7 +43,6 @@
             android:layout_marginBottom="7dp"
             android:padding="10dp" />
 
-        <!-- Password Input -->
         <EditText
             android:id="@+id/editTextPassword"
             android:layout_width="match_parent"
@@ -58,7 +55,6 @@
             android:layout_marginBottom="7dp"
             android:padding="10dp" />
 
-        <!-- Confirm Password Input -->
         <EditText
             android:id="@+id/editTextConfirmPassword"
             android:layout_width="match_parent"
@@ -71,7 +67,6 @@
             android:layout_marginBottom="7dp"
             android:padding="10dp" />
 
-        <!-- Register Button -->
         <Button
             android:id="@+id/buttonRegister"
             android:layout_width="match_parent"
@@ -81,7 +76,6 @@
             android:textColor="@android:color/white"
             android:layout_marginTop="10dp" />
 
-        <!-- Login Button -->
         <Button
             android:id="@+id/buttonLogin"
             android:layout_width="match_parent"

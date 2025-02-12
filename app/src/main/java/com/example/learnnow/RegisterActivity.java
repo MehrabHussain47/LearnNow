@@ -14,7 +14,7 @@ public class RegisterActivity extends AppCompatActivity {
     EditText editTextFullName, editTextEmail, editTextPassword, editTextConfirmPassword;
     Button buttonRegister, buttonLogin;
     DatabaseHelper db;
-    String selectedRole; // Role will be passed from RoleSelectionActivity
+    String selectedRole;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,7 +29,6 @@ public class RegisterActivity extends AppCompatActivity {
         buttonRegister = findViewById(R.id.buttonRegister);
         buttonLogin = findViewById(R.id.buttonLogin);
 
-        // Get the selected role passed from RoleSelectionActivity
         selectedRole = getIntent().getStringExtra("USER_ROLE");
 
         buttonRegister.setOnClickListener(v -> {
@@ -38,24 +37,19 @@ public class RegisterActivity extends AppCompatActivity {
             String password = editTextPassword.getText().toString().trim();
             String confirmPassword = editTextConfirmPassword.getText().toString().trim();
 
-            // Check for empty fields
             if (fullName.isEmpty() || email.isEmpty() || password.isEmpty() || confirmPassword.isEmpty()) {
                 Toast.makeText(RegisterActivity.this, "All fields are required", Toast.LENGTH_SHORT).show();
             }
-            // Check for password strength first
             else if (!isValidPassword(password)) {
                 editTextPassword.setError("Password must include at least one lowercase letter, one uppercase letter, one digit, and be at least 6 characters long.");
             }
-            // Then check if the passwords match
             else if (!password.equals(confirmPassword)) {
                 Toast.makeText(RegisterActivity.this, "Passwords do not match", Toast.LENGTH_SHORT).show();
             }
-            // Check for valid email
             else if (!isValidEmail(email)) {
                 editTextEmail.setError("Invalid Email Address");
             }
             else {
-                // Check if the email already exists
                 if (db.checkEmailExists(email)) {
                     Toast.makeText(RegisterActivity.this, "Email already exists, Registration Failed.", Toast.LENGTH_SHORT).show();
                 } else {
@@ -81,15 +75,14 @@ public class RegisterActivity extends AppCompatActivity {
         });
     }
 
-    // Validate Email using regex (for valid Gmail address)
     private boolean isValidEmail(String email) {
-        String emailPattern = "[a-zA-Z0-9._-]+@(gmail\\.com|lus\\.ac\\.bd)"; // Matches Gmail addresses
+        String emailPattern = "[a-zA-Z0-9._-]+@(gmail\\.com|lus\\.ac\\.bd)";
         Pattern pattern = Pattern.compile(emailPattern);
         Matcher matcher = pattern.matcher(email);
         return matcher.matches();
     }
 
-    // Validate Password using regex (at least 6 characters, one uppercase, one lowercase, and one digit)
+
     private boolean isValidPassword(String password) {
         String passwordPattern = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).{6,}$";
         Pattern pattern = Pattern.compile(passwordPattern);

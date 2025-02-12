@@ -15,26 +15,22 @@ import android.util.Log;
 public class DatabaseHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "LearnNow.db";
-    private static final int DATABASE_VERSION = 2; // Increment version
+    private static final int DATABASE_VERSION = 2;
 
-    // Table Name
     private static final String TABLE_USERS = "users";
     public static final String TABLE_COURSES = "courses";
 
-    // Columns for user table
     private static final String COLUMN_ID = "id";
     private static final String COLUMN_FULLNAME = "full_name";
     private static final String COLUMN_EMAIL = "email";
     private static final String COLUMN_PASSWORD = "password";
-    private static final String COLUMN_ROLE = "role"; // New column for role
+    private static final String COLUMN_ROLE = "role";
 
-    //Column for course table
     public static final String COLUMN_COURSE_ID = "course_id";
     public static final String COLUMN_COURSE_NAME = "course_name";
     public static final String COLUMN_INSTRUCTOR_NAME = "instructor_name";
     public static final String COLUMN_IMAGE_BLOB = "image_blob";
 
-    // New table for course purchase requests
     public static final String TABLE_REQUESTS = "requests";
     public static final String COLUMN_REQUEST_ID = "request_id";
     public static final String COLUMN_REQUEST_STUDENT = "student_fullname";
@@ -48,7 +44,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         Log.d("DatabaseHelper", "Creating tables...");
 
-        // Users Table
         String createTableQuery = "CREATE TABLE " + TABLE_USERS + " (" +
                 COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 COLUMN_FULLNAME + " TEXT, " +
@@ -58,7 +53,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(createTableQuery);
         Log.d("DatabaseHelper", "Users table created.");
 
-        // Courses Table
         String createTableQuery2 = "CREATE TABLE " + TABLE_COURSES + " (" +
                 COLUMN_COURSE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 COLUMN_COURSE_NAME + " TEXT, " +
@@ -67,7 +61,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(createTableQuery2);
         Log.d("DatabaseHelper", "Courses table created.");
 
-        // Requests Table
         String createRequestTableQuery = "CREATE TABLE " + TABLE_REQUESTS + " (" +
                 COLUMN_REQUEST_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 COLUMN_REQUEST_STUDENT + " TEXT, " +
@@ -84,25 +77,22 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        // Drop older table if exists
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_USERS);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_COURSES);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_REQUESTS);
-        // Create the table again with the new schema
         onCreate(db);
     }
 
-    // Insert User with Role
     public boolean insertUser(String fullName, String email, String password, String role) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(COLUMN_FULLNAME, fullName);
         values.put(COLUMN_EMAIL, email);
         values.put(COLUMN_PASSWORD, password);
-        values.put(COLUMN_ROLE, role); // Store the role
+        values.put(COLUMN_ROLE, role);
 
         long result = db.insert(TABLE_USERS, null, values);
-        return result != -1; // If result is -1, insertion failed
+        return result != -1;
     }
 
     public List<UserModel> getAllUsers() {
@@ -148,18 +138,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public boolean updateUserFullName(int userId, String newFullName) {
         SQLiteDatabase db = this.getWritableDatabase();
 
-        // Prepare the update statement
         ContentValues contentValues = new ContentValues();
-        contentValues.put("full_name", newFullName); // The column name and new value
+        contentValues.put("full_name", newFullName);
 
-        // Execute the update
         int rowsAffected = db.update("users", contentValues, "id = ?", new String[]{String.valueOf(userId)});
         db.close();
 
-        return rowsAffected > 0; // Returns true if at least one row was updated
+        return rowsAffected > 0;
     }
 
-    // Insert a new request
     public boolean insertRequest(String studentFullName, String courseName) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -170,7 +157,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return result != -1;
     }
 
-    // Retrieve all requests
     public List<RequestModel> getAllRequests() {
         List<RequestModel> requestList = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
@@ -187,7 +173,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return requestList;
     }
 
-    // Check if the email already exists in the database
     public boolean checkEmailExists(String email) {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery("SELECT * FROM users WHERE email=?", new String[]{email});
@@ -197,7 +182,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
 
-    // Check if email and password are valid
     public boolean checkEmailPassword(String email, String password) {
         SQLiteDatabase db = this.getReadableDatabase();
         String query = "SELECT * FROM " + TABLE_USERS + " WHERE " + COLUMN_EMAIL + "=? AND " + COLUMN_PASSWORD + "=?";
@@ -208,7 +192,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return exists;
     }
 
-    // Check if email, password and role match
     public boolean checkEmailPasswordRole(String email, String password, String role) {
         SQLiteDatabase db = this.getReadableDatabase();
         String query = "SELECT * FROM " + TABLE_USERS + " WHERE " + COLUMN_EMAIL + "=? AND " + COLUMN_PASSWORD + "=? AND " + COLUMN_ROLE + "=?";
@@ -231,11 +214,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         long result = db.insert(TABLE_COURSES, null, values);
         db.close();
 
-        return result != -1; // Return true if insert was successful
+        return result != -1;
     }
 
 
-    // Get all courses from the courses table
+
     public List<CourseModel> getAllCourses() {
         List<CourseModel> courseList = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
@@ -260,25 +243,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length);
     }
 
-
-    // Get a course by its ID
-//    public CourseModel getCourseById(int courseId) {
-//        SQLiteDatabase db = this.getReadableDatabase();
-//        Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_COURSES + " WHERE " + COLUMN_COURSE_ID + "=?", new String[]{String.valueOf(courseId)});
-//
-//        if (cursor.moveToFirst()) {
-//            int id = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_COURSE_ID));
-//            String courseName = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_COURSE_NAME));
-//            String instructorName = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_INSTRUCTOR_NAME));
-//            String imagePath = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_IMAGE_BLOB));
-//            cursor.close();
-//            return new CourseModel(id, courseName, instructorName, imagePath);
-//        }
-//        cursor.close();
-//        return null;
-//    }
-
-    // Delete a course by its ID
     public boolean deleteCourse(int courseId) {
         SQLiteDatabase db = this.getWritableDatabase();
         int rowsAffected = db.delete(TABLE_COURSES, COLUMN_COURSE_ID + "=?", new String[]{String.valueOf(courseId)});
@@ -286,7 +250,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return rowsAffected > 0;
     }
 
-    // Update course details by its ID
     public boolean updateCourse(int courseId, String courseName, String instructorName, Bitmap image) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
@@ -299,7 +262,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return rowsAffected > 0;
     }
 
-    // Check if a course exists by its name
     public boolean checkCourseExists(String courseName) {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_COURSES + " WHERE " + COLUMN_COURSE_NAME + "=?", new String[]{courseName});

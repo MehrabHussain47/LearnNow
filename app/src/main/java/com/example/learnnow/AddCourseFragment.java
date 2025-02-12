@@ -40,45 +40,38 @@ public class AddCourseFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_add_course, container, false);
 
-        // Initialize views
         courseNameEditText = view.findViewById(R.id.courseName);
         instructorNameEditText = view.findViewById(R.id.instructorName);
         photoImageView = view.findViewById(R.id.photoImageView);
         selectPhotoButton = view.findViewById(R.id.selectPhotoButton);
         addCourseButton = view.findViewById(R.id.addCourseButton);
 
-        // Initialize database helper
         databaseHelper = new DatabaseHelper(getContext());
 
-        // Handle select photo button click
         selectPhotoButton.setOnClickListener(v -> openGallery());
 
-        // Handle add course button click
         addCourseButton.setOnClickListener(v -> addCourse());
 
         return view;
     }
 
-    // Open the gallery to select an image
     private void openGallery() {
         Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         startActivityForResult(intent, PICK_IMAGE);
     }
 
-    // Handle the result of the image selection
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == PICK_IMAGE && resultCode == getActivity().RESULT_OK) {
             selectedImageUri = data.getData();
-            photoImageView.setImageURI(selectedImageUri); // Show the selected image in ImageView
+            photoImageView.setImageURI(selectedImageUri);
         }
     }
 
 
 
-    // Add course to the database
     private void addCourse() {
         String courseName = courseNameEditText.getText().toString().trim();
         String instructorName = instructorNameEditText.getText().toString().trim();
@@ -87,19 +80,16 @@ public class AddCourseFragment extends Fragment {
             Toast.makeText(getContext(), "Please fill in all fields and select an image", Toast.LENGTH_SHORT).show();
         } else {
             try {
-                // Convert URI to Bitmap
                 Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), selectedImageUri);
 
-                // Insert course into the database
                 boolean isInserted = databaseHelper.insertCourse(courseName, instructorName, bitmap);
 
                 if (isInserted) {
                     Toast.makeText(getContext(), "Course added successfully!", Toast.LENGTH_SHORT).show();
 
-                    // Clear the fields
                     courseNameEditText.setText("");
                     instructorNameEditText.setText("");
-                    photoImageView.setImageResource(R.drawable.ic_placeholder); // Reset ImageView
+                    photoImageView.setImageResource(R.drawable.ic_placeholder);
                     selectedImageUri = null;
                 } else {
                     Toast.makeText(getContext(), "Failed to add course!", Toast.LENGTH_SHORT).show();

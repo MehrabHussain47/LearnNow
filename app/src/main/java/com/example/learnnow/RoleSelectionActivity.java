@@ -22,7 +22,7 @@ public class RoleSelectionActivity extends AppCompatActivity {
 
     private void navigateToMainActivity(String role) {
         Intent intent = new Intent(RoleSelectionActivity.this, MainActivity.class);
-        intent.putExtra("USER_ROLE", role); // Pass the selected role
+        intent.putExtra("USER_ROLE", role);
         startActivity(intent);
         finish();
     }

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "98967162961",
+    "project_id": "learnnow-bdf76",
+    "storage_bucket": "learnnow-bdf76.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:98967162961:android:176b842ef872cb5542e870",
+        "android_client_info": {
+          "package_name": "com.example.learnnow"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDUfdKHul0gZ3yZ8Od-9000jq4DXH4RyEc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
