@@ -1,5 +1,5 @@
 package com.example.learnnow;
-// We can start from here.
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
